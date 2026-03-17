@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Linq.Expressions;
+using System.Security.Cryptography;
 
 namespace JogoDaForca.ConsoleApp;
 
@@ -28,11 +29,17 @@ class Program
             }
 
             bool JogadorAcertouPalavra = false;
+            bool JogadorPerdeu = false;
 
-            while (!JogadorAcertouPalavra)
+            int quantidadeDeErros = 0;
+
+
+
+            while (!JogadorAcertouPalavra && !JogadorPerdeu)
             {
 
                 Console.WriteLine(letraAcertadas);
+                Console.WriteLine(quantidadeDeErros);
 
                 Console.Write("Digite uma letra: ");
                 string? strLetra = Console.ReadLine();
@@ -46,6 +53,8 @@ class Program
 
                 char letraChute = char.ToUpper(Convert.ToChar(strLetra));
 
+                bool letraFoiEncontrada = false;
+
                 for (int contador = 0; contador < palavraAleatoria.Length; contador++)
                 {
                     char letraAtual = palavraAleatoria[contador];
@@ -53,13 +62,33 @@ class Program
                     if (letraChute == letraAtual)
                     {
                         letraAcertadas[contador] = letraAtual;
+                        letraFoiEncontrada == true;
                     }
                 }
 
+                if (letraFoiEncontrada == false)
+                {
+                    quantidadeDeErros++;
+                }               
+                    
                 JogadorAcertouPalavra = palavraAleatoria == string.Join("", letraAcertadas);
+                JogadorPerdeu = quantidadeDeErros > 5;
+
+                if (JogadorAcertouPalavra)
+                {
+                    Console.WriteLine("-----------------------------------------------------------");
+                    Console.WriteLine($"Voce acertou a palavra a palavra era, {palavraAleatoria}");
+                    Console.WriteLine("-----------------------------------------------------------");
+                }
+                else if (JogadorPerdeu)
+                {
+                    Console.WriteLine("-----------------------------------------------------------");
+                    Console.WriteLine($"Voce perdeu o jogo a palavra era, {palavraAleatoria}");
+                    Console.WriteLine("-----------------------------------------------------------");
+                }
             }
 
-            Console.WriteLine("DEseja continuar o jogo? (s/n)");
+            Console.WriteLine("Deseja continuar o jogo? (s/n)");
             string? opcontinuar = Console.ReadLine();
 
             if (opcontinuar?.ToUpper() != "S")
